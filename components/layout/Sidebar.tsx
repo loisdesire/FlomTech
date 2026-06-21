@@ -35,7 +35,7 @@ export default function Sidebar({ lowStockCount }: Props) {
     .split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase();
 
   function navigate(id: string) {
-    router.push(`/${id}`);
+    router.push(`/tracker/${id}`);
     setSidebarOpen(false);
   }
 
@@ -73,7 +73,7 @@ export default function Sidebar({ lowStockCount }: Props) {
                 {visible.map(({ id, label, Icon }) => (
                   <button
                     key={id}
-                    className={`navbtn ${pathname === `/${id}` ? 'active' : ''}`}
+                    className={`navbtn ${pathname === `/tracker/${id}` ? 'active' : ''}`}
                     onClick={() => navigate(id)}
                   >
                     <Icon className="ic" />

@@ -2,8 +2,12 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Market Glide Solutions — Sales & Inventory Tracker',
-  description: 'Multi-user sales and inventory management for Market Glide Solutions.',
+  title: {
+    default: 'Flom Digital — Learn. Build. Automate. Profit.',
+    template: '%s | Flom Digital',
+  },
+  description:
+    'Business education, importation training, and free productivity tools for serious business builders.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

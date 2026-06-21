@@ -54,7 +54,7 @@ export function AppProvider({ children, initialProfile }: {
     const saved = localStorage.getItem('mg_display_currency');
     if (saved) setDisplayCurrencyState(saved);
 
-    fetch('/api/rates')
+    fetch('/api/tracker/rates')
       .then(r => r.json())
       .then(data => {
         if (data.rates) {
@@ -98,5 +98,5 @@ export function useApp() {
 export async function signOut() {
   const supabase = createClient();
   await supabase.auth.signOut();
-  window.location.href = '/login';
+  window.location.href = '/tracker/login';
 }

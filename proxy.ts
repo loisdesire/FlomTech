@@ -28,23 +28,24 @@ export async function proxy(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/register');
-  const isApiRoute  = pathname.startsWith('/api');
+  const isApiRoute         = pathname.startsWith('/api');
+  const isTrackerAuthRoute = pathname.startsWith('/tracker/login') || pathname.startsWith('/tracker/register');
+  const isTrackerAppRoute  = pathname.startsWith('/tracker') && !isTrackerAuthRoute;
 
-  // API routes handle their own auth — let them through
-  if (isApiRoute) return supabaseResponse;
+  // API routes and all marketing/public routes are always allowed
+  if (isApiRoute || (!isTrackerAuthRoute && !isTrackerAppRoute)) return supabaseResponse;
 
-  // Unauthenticated user trying to access the app
-  if (!user && !isAuthRoute) {
+  // Unauthenticated user trying to access the tracker app
+  if (!user && isTrackerAppRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = '/login';
+    url.pathname = '/tracker/login';
     return NextResponse.redirect(url);
   }
 
-  // Authenticated user trying to visit login
-  if (user && isAuthRoute) {
+  // Authenticated user trying to visit tracker login/register
+  if (user && isTrackerAuthRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
+    url.pathname = '/tracker/dashboard';
     return NextResponse.redirect(url);
   }
 
