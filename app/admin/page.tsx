@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { FileText, Package, MessageSquare, ArrowRight, Clock } from 'lucide-react';
+import { FileText, Package, MessageSquare, ArrowRight, Clock, TrendingUp } from 'lucide-react';
 
 async function getStats() {
   const admin = createAdminClient();
@@ -46,28 +46,41 @@ export default async function AdminDashboard() {
     <>
       <div className="adm-topbar">
         <span className="adm-topbar-title">Dashboard</span>
-        <span className="adm-topbar-meta">Welcome back</span>
+        <span className="adm-topbar-meta">
+          {new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long' })}
+        </span>
       </div>
 
       <div className="adm-page">
         {/* Stats */}
         <div className="adm-stat-grid">
           <div className="adm-stat">
+            <div className="adm-stat-icon" style={{ background: '#eff6ff', color: '#3b82f6' }}><FileText size={16} /></div>
             <div className="adm-stat-value">{stats.posts.total}</div>
             <div className="adm-stat-label">Blog Posts</div>
             <div className="adm-stat-sub">{stats.posts.published} published · {stats.posts.drafts} drafts</div>
           </div>
           <div className="adm-stat">
+            <div className="adm-stat-icon" style={{ background: '#fff7ed', color: '#f97316' }}><Package size={16} /></div>
             <div className="adm-stat-value">{stats.products.active}</div>
             <div className="adm-stat-label">Active Products</div>
             <div className="adm-stat-sub">{stats.products.total} total</div>
           </div>
           <div className="adm-stat">
+            <div className="adm-stat-icon" style={{ background: stats.enquiries.newCount > 0 ? '#fef3c7' : '#f3f4f6', color: stats.enquiries.newCount > 0 ? '#b45309' : '#9ca3af' }}>
+              <MessageSquare size={16} />
+            </div>
             <div className="adm-stat-value" style={{ color: stats.enquiries.newCount > 0 ? '#b45309' : undefined }}>
               {stats.enquiries.newCount}
             </div>
             <div className="adm-stat-label">New Enquiries</div>
             <div className="adm-stat-sub">{stats.enquiries.total} total</div>
+          </div>
+          <div className="adm-stat">
+            <div className="adm-stat-icon" style={{ background: '#f0fdf4', color: '#16a34a' }}><TrendingUp size={16} /></div>
+            <div className="adm-stat-value" style={{ color: '#16a34a' }}>—</div>
+            <div className="adm-stat-label">Revenue</div>
+            <div className="adm-stat-sub">Stripe not connected</div>
           </div>
         </div>
 

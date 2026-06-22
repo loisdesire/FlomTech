@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Package, ToggleLeft, ToggleRight, Plus, Edit } from 'lucide-react';
 
 type Product = {
-  id: string; slug: string; title: string; type: string;
+  id: string; slug: string; title: string; type: string; section: string;
   price_usd: number; is_active: boolean; sort_order: number;
 };
 
@@ -51,8 +51,14 @@ export default function AdminProductsPage() {
   }
 
   const TYPE_LABELS: Record<string, string> = {
-    course: 'Course', guide: 'Guide', template: 'Template',
-    tool_access: 'Tool Access', bundle: 'Bundle',
+    course: 'Course', video: 'Video', ebook: 'eBook',
+    guide: 'Guide', template: 'Template', tool_access: 'Tool Access', bundle: 'Bundle',
+  };
+
+  const SECTION_LABELS: Record<string, { label: string; color: string }> = {
+    academy: { label: 'Academy', color: '#3b82f6' },
+    shop:    { label: 'Shop',    color: '#7c3aed' },
+    both:    { label: 'Both',    color: '#16a34a' },
   };
 
   return (
@@ -82,6 +88,7 @@ export default function AdminProductsPage() {
                   <tr>
                     <th>Product</th>
                     <th>Type</th>
+                    <th>Section</th>
                     <th>Price (USD)</th>
                     <th>Status</th>
                     <th>Toggle</th>
@@ -96,6 +103,9 @@ export default function AdminProductsPage() {
                         <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>{p.slug}</div>
                       </td>
                       <td style={{ color: '#6b7280' }}>{TYPE_LABELS[p.type] ?? p.type}</td>
+                      <td>
+                        {(() => { const s = SECTION_LABELS[p.section]; return s ? <span style={{ fontSize: 11, fontWeight: 700, color: s.color, background: s.color + '18', borderRadius: 5, padding: '2px 8px' }}>{s.label}</span> : <span style={{ color: '#9ca3af' }}>—</span>; })()}
+                      </td>
                       <td>
                         <input
                           type="number"

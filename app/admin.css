@@ -144,6 +144,16 @@
   padding: 20px;
 }
 
+.adm-stat-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
 .adm-stat-value {
   font-size: 28px;
   font-weight: 800;
