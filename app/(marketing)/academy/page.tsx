@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, MapPin } from 'lucide-react';
+import { ArrowRight, CheckCircle, MapPin, Zap } from 'lucide-react';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export const metadata: Metadata = {
@@ -43,11 +43,11 @@ export default async function AcademyPage() {
     <>
       {/* ── Hero ── */}
       <section style={{ background: 'var(--fd-navy)', color: '#fff', padding: '88px 0 80px', position: 'relative', overflow: 'hidden' }}>
-        {/* Subtle horizontal rule texture */}
+        {/* Crosshatch grid texture */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px)',
-          backgroundSize: '100% 56px',
+          backgroundImage: 'linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px)',
+          backgroundSize: '52px 52px',
           pointerEvents: 'none',
         }} />
 
@@ -70,15 +70,15 @@ export default async function AcademyPage() {
             </div>
           </div>
 
-          {/* Right — 2×2 bento grid: alternating dark glass / orange glass */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {/* Right — feature grid: 3 cards + full-width strip */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
 
-            {/* Cell 1 — dark glass: ∞ lifetime access (compact, icon inline) */}
+            {/* Cell 1 — dark glass: ∞ lifetime (compact, icon inline) */}
             <div style={{
               background: 'rgba(255,255,255,.06)',
               border: '1px solid rgba(255,255,255,.1)',
-              borderRadius: 14, padding: '18px 20px',
-              display: 'flex', alignItems: 'center', gap: 12,
+              borderRadius: 14, padding: '18px 16px',
+              display: 'flex', alignItems: 'center', gap: 10,
             }}>
               <div style={{
                 width: 36, height: 36, borderRadius: 10, flexShrink: 0,
@@ -88,16 +88,16 @@ export default async function AcademyPage() {
                 <span style={{ fontSize: 18, fontWeight: 900, color: '#fff', lineHeight: 1 }}>∞</span>
               </div>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Lifetime access</div>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Lifetime access</div>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,.45)' }}>Buy once. Keep forever.</div>
               </div>
             </div>
 
-            {/* Cell 2 — orange glass: 22+ big stat */}
+            {/* Cell 2 — orange glass: 22+ stat */}
             <div style={{
               background: 'rgba(249,115,22,.12)',
               border: '1px solid rgba(249,115,22,.25)',
-              borderRadius: 14, padding: '20px',
+              borderRadius: 14, padding: '20px 16px',
             }}>
               <div style={{ fontSize: 42, fontWeight: 900, color: 'var(--fd-orange)', lineHeight: 1 }}>22+</div>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 8, lineHeight: 1.4 }}>
@@ -109,32 +109,37 @@ export default async function AcademyPage() {
             <div style={{
               background: 'rgba(255,255,255,.06)',
               border: '1px solid rgba(255,255,255,.1)',
-              borderRadius: 14, padding: '18px 20px',
-              display: 'flex', alignItems: 'center', gap: 12,
+              borderRadius: 14, padding: '18px 16px',
+              display: 'flex', alignItems: 'center', gap: 10,
             }}>
               <div style={{
                 width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                background: 'rgba(255,255,255,.1)',
+                background: 'rgba(249,115,22,.15)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <MapPin size={18} color="#fff" />
+                <MapPin size={18} color="var(--fd-orange)" />
               </div>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Africa-first</div>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Africa-first</div>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,.45)' }}>Nigeria · Ghana · Kenya</div>
               </div>
             </div>
 
-            {/* Cell 4 — orange glass: 100% practical big stat */}
+            {/* Cell 4 — full-width orange strip */}
             <div style={{
-              background: 'rgba(249,115,22,.12)',
-              border: '1px solid rgba(249,115,22,.25)',
-              borderRadius: 14, padding: '20px',
+              gridColumn: '1 / 4',
+              background: 'var(--fd-orange)',
+              borderRadius: 14, padding: '16px 22px',
+              display: 'flex', alignItems: 'center', gap: 14,
             }}>
-              <div style={{ fontSize: 42, fontWeight: 900, color: 'var(--fd-orange)', lineHeight: 1 }}>100%</div>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 8, lineHeight: 1.4 }}>
-                Practical — no theory, just results
+              <Zap size={20} color="#fff" fill="#fff" style={{ flexShrink: 0 }} />
+              <div>
+                <div style={{ fontSize: 13.5, fontWeight: 700, color: '#fff' }}>Practical, not theoretical</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,.75)', marginTop: 2 }}>
+                  Built by someone who actually runs an importation business
+                </div>
               </div>
+              <CheckCircle size={18} color="rgba(255,255,255,.6)" style={{ marginLeft: 'auto', flexShrink: 0 }} />
             </div>
 
           </div>
