@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Eye, EyeOff, Trash2 } from 'lucide-react';
+import FileUpload from '@/app/admin/FileUpload';
 
 const CATEGORIES = [
   'importation', 'business', 'tips-and-tricks', 'market-research',
@@ -200,11 +201,13 @@ export default function EditBlogPostPage() {
                   onChange={e => set('read_time_min', parseInt(e.target.value, 10) || 1)} />
               </div>
 
-              <div className="adm-field">
-                <label>Cover image URL</label>
-                <input type="url" placeholder="https://..." value={form.cover_url ?? ''}
-                  onChange={e => set('cover_url', e.target.value)} />
-              </div>
+              <FileUpload
+                label="Cover image"
+                type="image"
+                folder="blog"
+                currentUrl={form.cover_url ?? ''}
+                onUpload={url => set('cover_url', url)}
+              />
             </div>
           </div>
         </div>

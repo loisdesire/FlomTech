@@ -38,13 +38,37 @@ ALTER TABLE returns               ADD COLUMN IF NOT EXISTS business_id UUID REFE
 ALTER TABLE inventory_adjustments ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 
 -- ── 3. Seed existing rows with the first business ────────────
-UPDATE user_profiles         SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1) WHERE business_id IS NULL;
-UPDATE products              SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1) WHERE business_id IS NULL;
-UPDATE purchase_orders       SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1) WHERE business_id IS NULL;
-UPDATE customers             SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1) WHERE business_id IS NULL;
-UPDATE sales                 SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1) WHERE business_id IS NULL;
-UPDATE returns               SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1) WHERE business_id IS NULL;
-UPDATE inventory_adjustments SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1) WHERE business_id IS NULL;
+-- The extra AND clause prevents this from running when multiple businesses already
+-- exist (i.e. real registrations have happened). This is a one-time data migration
+-- for the original single-tenant data only.
+UPDATE user_profiles
+  SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1)
+  WHERE business_id IS NULL
+    AND (SELECT COUNT(*) FROM businesses) = 1;
+
+UPDATE products
+  SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1)
+  WHERE business_id IS NULL;
+
+UPDATE purchase_orders
+  SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1)
+  WHERE business_id IS NULL;
+
+UPDATE customers
+  SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1)
+  WHERE business_id IS NULL;
+
+UPDATE sales
+  SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1)
+  WHERE business_id IS NULL;
+
+UPDATE returns
+  SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1)
+  WHERE business_id IS NULL;
+
+UPDATE inventory_adjustments
+  SET business_id = (SELECT id FROM businesses ORDER BY created_at LIMIT 1)
+  WHERE business_id IS NULL;
 
 -- ── 4. Performance indexes ────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_user_profiles_business         ON user_profiles         (business_id);

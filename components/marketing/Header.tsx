@@ -76,7 +76,7 @@ export default function Header() {
 
         {/* Right actions */}
         <div className="fd-header-actions">
-          <Link href="/tracker/login" className="fd-header-cta">Login</Link>
+          <Link href="/login" className="fd-header-cta">Login</Link>
           <button
             className="fd-hamburger"
             onClick={() => setDrawerOpen(true)}
@@ -150,7 +150,7 @@ export default function Header() {
 
         <div className="fd-drawer-footer">
           <Link
-            href="/tracker/login"
+            href="/login"
             className="fd-btn fd-btn-primary"
             style={{ width: '100%', justifyContent: 'center' }}
             onClick={closeDrawer}

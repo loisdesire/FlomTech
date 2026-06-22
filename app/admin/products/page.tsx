@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Package, ToggleLeft, ToggleRight, Plus } from 'lucide-react';
+import { Package, ToggleLeft, ToggleRight, Plus, Edit } from 'lucide-react';
 
 type Product = {
   id: string; slug: string; title: string; type: string;
@@ -59,6 +59,9 @@ export default function AdminProductsPage() {
     <>
       <div className="adm-topbar">
         <span className="adm-topbar-title">Products</span>
+        <Link href="/admin/products/new" className="adm-btn adm-btn-primary adm-btn-sm">
+          <Plus size={14} /> New Product
+        </Link>
       </div>
 
       <div className="adm-page">
@@ -82,6 +85,7 @@ export default function AdminProductsPage() {
                     <th>Price (USD)</th>
                     <th>Status</th>
                     <th>Toggle</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -121,6 +125,11 @@ export default function AdminProductsPage() {
                             ? <ToggleRight size={20} color="#15803d" />
                             : <ToggleLeft  size={20} color="#9ca3af" />}
                         </button>
+                      </td>
+                      <td>
+                        <Link href={`/admin/products/${p.id}`} className="adm-btn adm-btn-ghost adm-btn-sm">
+                          <Edit size={13} /> Edit
+                        </Link>
                       </td>
                     </tr>
                   ))}

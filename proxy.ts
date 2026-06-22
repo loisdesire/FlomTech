@@ -29,31 +29,35 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
   const isApiRoute         = pathname.startsWith('/api');
+  const isLoginRoute       = pathname === '/login';
   const isTrackerAuthRoute = pathname.startsWith('/tracker/login') || pathname.startsWith('/tracker/register');
   const isTrackerAppRoute  = pathname.startsWith('/tracker') && !isTrackerAuthRoute;
   const isAdminRoute       = pathname.startsWith('/admin');
+  const isProtectedRoute   = isTrackerAppRoute || isAdminRoute;
 
-  // API routes and all marketing/public routes are always allowed
-  if (isApiRoute || (!isTrackerAuthRoute && !isTrackerAppRoute && !isAdminRoute)) return supabaseResponse;
+  // API and all public/marketing routes are always allowed
+  if (isApiRoute || (!isLoginRoute && !isTrackerAuthRoute && !isProtectedRoute)) return supabaseResponse;
 
-  // Unauthenticated user trying to access the tracker app
-  if (!user && isTrackerAppRoute) {
+  // Unauthenticated user trying to access a protected route → platform login
+  if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = '/tracker/login';
+    url.pathname = '/login';
     return NextResponse.redirect(url);
   }
 
-  // Unauthenticated user trying to access the admin
-  if (!user && isAdminRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/tracker/login';
-    return NextResponse.redirect(url);
-  }
-
-  // Authenticated user trying to visit tracker login/register
+  // Authenticated user on tracker login/register → tracker dashboard
   if (user && isTrackerAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = '/tracker/dashboard';
+    return NextResponse.redirect(url);
+  }
+
+  // Authenticated user on /login → route them to the right place
+  if (user && isLoginRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = user.email === process.env.PLATFORM_ADMIN_EMAIL
+      ? '/admin'
+      : '/tracker/dashboard';
     return NextResponse.redirect(url);
   }
 

@@ -35,18 +35,16 @@ export async function POST(request: Request) {
     return jsonError(bizErr?.message ?? 'Failed to create business.');
   }
 
-  // Link user to the business as Administrator
+  // The handle_new_user trigger (0003) already created the profile row.
+  // Use a plain UPDATE — clearer than upsert and avoids INSERT policy conflicts.
   const { error: profileErr } = await admin
     .from('user_profiles')
-    .upsert(
-      {
-        id:          userId,
-        full_name:   full_name?.trim() ?? '',
-        role:        'Administrator',
-        business_id: business.id,
-      },
-      { onConflict: 'id' },
-    );
+    .update({
+      full_name:   full_name?.trim() ?? '',
+      role:        'Administrator',
+      business_id: business.id,
+    })
+    .eq('id', userId);
   if (profileErr) {
     await admin.auth.admin.deleteUser(userId);
     return jsonError(profileErr.message);
