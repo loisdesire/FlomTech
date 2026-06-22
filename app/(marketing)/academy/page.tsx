@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle, MapPin, Zap } from 'lucide-react';
+import { ArrowRight, MapPin, Zap } from 'lucide-react';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export const metadata: Metadata = {
@@ -70,43 +70,59 @@ export default async function AcademyPage() {
             </div>
           </div>
 
-          {/* Right — 2-col bento: Cell 1 hugs content, rest unchanged */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: 'auto auto auto', gap: 8 }}>
+          {/* Right — 2×2 bento */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
 
-            {/* Cell 1 — dark glass: ∞ lifetime, compact inline, hugs content */}
+            {/* Row 1 Left — dark glass: lifetime, hugs content */}
             <div style={{
-              gridRow: '1 / 3', alignSelf: 'start',
+              alignSelf: 'start',
               background: 'rgba(255,255,255,.06)',
               border: '1px solid rgba(255,255,255,.1)',
+              borderRadius: 14, padding: '22px',
+              display: 'flex', flexDirection: 'column',
+            }}>
+              <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--fd-orange)', marginBottom: 14 }}>
+                Lifetime access
+              </span>
+              <div style={{ fontSize: 58, fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 14 }}>∞</div>
+              <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,.5)', lineHeight: 1.55, margin: 0 }}>
+                Buy once. Your content is there whenever you need it — no expiry.
+              </p>
+            </div>
+
+            {/* Row 1 Right — orange glass: 22+ stat */}
+            <div style={{
+              background: 'rgba(249,115,22,.12)',
+              border: '1px solid rgba(249,115,22,.25)',
+              borderRadius: 14, padding: '22px',
+            }}>
+              <div style={{ fontSize: 46, fontWeight: 900, color: 'var(--fd-orange)', lineHeight: 1 }}>22+</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 10, lineHeight: 1.5 }}>
+                In-depth chapters,<br />zero filler
+              </div>
+            </div>
+
+            {/* Row 2 Left — orange glass: practical */}
+            <div style={{
+              background: 'rgba(249,115,22,.12)',
+              border: '1px solid rgba(249,115,22,.25)',
               borderRadius: 14, padding: '18px 20px',
               display: 'flex', alignItems: 'center', gap: 12,
             }}>
               <div style={{
                 width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                background: 'rgba(255,255,255,.1)',
+                background: 'rgba(249,115,22,.2)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <span style={{ fontSize: 18, fontWeight: 900, color: '#fff', lineHeight: 1 }}>∞</span>
+                <Zap size={17} color="var(--fd-orange)" fill="var(--fd-orange)" />
               </div>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Lifetime access</div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,.45)' }}>Buy once. Keep forever.</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Practical knowledge</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,.5)' }}>No theory. Just results.</div>
               </div>
             </div>
 
-            {/* Cell 2 — orange glass: 22+ stat */}
-            <div style={{
-              background: 'rgba(249,115,22,.12)',
-              border: '1px solid rgba(249,115,22,.25)',
-              borderRadius: 14, padding: '20px',
-            }}>
-              <div style={{ fontSize: 42, fontWeight: 900, color: 'var(--fd-orange)', lineHeight: 1 }}>22+</div>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 8, lineHeight: 1.4 }}>
-                In-depth chapters, zero filler
-              </div>
-            </div>
-
-            {/* Cell 3 — dark glass: Africa-first inline */}
+            {/* Row 2 Right — dark glass: Africa-first */}
             <div style={{
               background: 'rgba(255,255,255,.06)',
               border: '1px solid rgba(255,255,255,.1)',
@@ -124,23 +140,6 @@ export default async function AcademyPage() {
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Africa-first</div>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,.45)' }}>Nigeria · Ghana · Kenya</div>
               </div>
-            </div>
-
-            {/* Cell 4 — solid orange strip spanning full width */}
-            <div style={{
-              gridColumn: '1 / 3',
-              background: 'var(--fd-orange)',
-              borderRadius: 14, padding: '16px 22px',
-              display: 'flex', alignItems: 'center', gap: 14,
-            }}>
-              <Zap size={20} color="#fff" fill="#fff" style={{ flexShrink: 0 }} />
-              <div>
-                <div style={{ fontSize: 13.5, fontWeight: 700, color: '#fff' }}>Practical, not theoretical</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,.75)', marginTop: 2 }}>
-                  Built by someone who actually runs an importation business
-                </div>
-              </div>
-              <CheckCircle size={18} color="rgba(255,255,255,.6)" style={{ marginLeft: 'auto', flexShrink: 0 }} />
             </div>
 
           </div>
