@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { BookOpen, FileText, ShoppingBag, ExternalLink, Lock, LogOut, CheckCircle2 } from 'lucide-react';
+import { BookOpen, FileText, ShoppingBag, ExternalLink, LogOut, CheckCircle2 } from 'lucide-react';
+import BuyButton from '@/components/BuyButton';
 
 type Product = {
   id: string;
@@ -208,16 +209,7 @@ function ProductCard({ product: p, owned }: { product: Product; owned: boolean }
             <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--fd-navy)' }}>
               {p.price_usd === 0 ? 'Free' : fmt(p.price_usd)}
             </span>
-            <button
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                background: 'var(--fd-orange)', color: '#fff', fontWeight: 700, fontSize: 13,
-                padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
-              }}
-              onClick={() => alert('Payment coming soon — we\'ll email you when it\'s live.')}
-            >
-              <Lock size={12} /> Get access
-            </button>
+            <BuyButton slug={p.slug} price={p.price_usd} label="Get access" />
           </div>
         )}
       </div>

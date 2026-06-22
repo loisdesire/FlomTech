@@ -30,10 +30,20 @@ export default function ContactForm() {
       return;
     }
     setLoading(true);
-    // Placeholder — wire up to an email API (Resend, Formspree, etc.) when ready
-    await new Promise(r => setTimeout(r, 900));
-    setSent(true);
-    setLoading(false);
+    try {
+      const res = await fetch('/api/contact', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(form),
+      });
+      const data = await res.json() as { ok?: boolean; error?: string };
+      if (!res.ok) { setError(data.error ?? 'Something went wrong. Please try again.'); return; }
+      setSent(true);
+    } catch {
+      setError('Network error. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (sent) {

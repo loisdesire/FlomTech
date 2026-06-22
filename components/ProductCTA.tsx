@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { ArrowRight, Eye, EyeOff, Play, Download, Lock } from 'lucide-react';
+import BuyButton from '@/components/BuyButton';
 
 type ProductInfo = { id: string; file_url: string; type: string; price_usd: number };
 type UIState     = 'loading' | 'owned' | 'member' | 'guest';
@@ -76,7 +77,14 @@ export default function ProductCTA({ slug, label = 'Get Access' }: Props) {
     }
 
     await supabase.auth.signInWithPassword({ email, password });
-    router.push(`/checkout?product=${slug}`);
+    // Trigger Stripe checkout after account creation
+    const checkoutRes = await fetch('/api/checkout/stripe', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug }),
+    });
+    const { url } = await checkoutRes.json() as { url?: string };
+    if (url) { window.location.href = url; return; }
+    router.push(`/academy/${slug}`);
   }
 
   /* ── Owned: show access ── */
@@ -94,12 +102,14 @@ export default function ProductCTA({ slug, label = 'Get Access' }: Props) {
 
   /* ── Logged-in, not purchased ── */
   if (uiState === 'member') {
+    if (!product) return null;
     return (
-      <button onClick={() => router.push(`/checkout?product=${slug}`)}
+      <BuyButton
+        slug={slug}
+        price={product.price_usd}
+        label={label}
         className="fd-btn fd-btn-primary"
-        style={{ fontSize: 15, padding: '12px 24px', border: 'none', cursor: 'pointer' }}>
-        <Lock size={14} /> {label}{product ? ` — $${product.price_usd}` : ''} <ArrowRight size={14} />
-      </button>
+      />
     );
   }
 
