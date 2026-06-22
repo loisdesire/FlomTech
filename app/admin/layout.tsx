@@ -15,7 +15,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect('/tracker/login');
+  if (!user) redirect('/login');
   if (user.email !== process.env.PLATFORM_ADMIN_EMAIL) redirect('/');
 
   return (
