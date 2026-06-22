@@ -1,36 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, BookOpen, GraduationCap, CheckCircle, Clock } from 'lucide-react';
+import { ArrowRight, CheckCircle, Clock } from 'lucide-react';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export const metadata: Metadata = {
   title: 'Academy',
   description: 'Practical importation education and business courses from Flom Digital. Learn to import, sell, and profit.',
 };
-
-const PRODUCTS = [
-  {
-    Icon:      GraduationCap,
-    badge:     'Course',
-    badgeColor: '#3B82F6',
-    title:     'Mini Importation Mastery Course',
-    desc:      'The complete video-based training on building a profitable importation business from scratch. Covers sourcing, shipping, customs, pricing, and your first sale.',
-    price:     '$20',
-    features:  ['Video lessons', 'Live Q&A sessions', 'Real supplier contacts', 'Private community access'],
-    href:      '/academy/mini-importation-course',
-    cta:       'Enroll Now',
-  },
-  {
-    Icon:      BookOpen,
-    badge:     'eBook',
-    badgeColor: 'var(--fd-orange)',
-    title:     'Mini Importation Mastery Guide',
-    desc:      '22 chapters walking you through every stage of the importation business, from identifying products to making your first sale. Read at your own pace.',
-    price:     '$30',
-    features:  ['22 in-depth chapters', 'Supplier evaluation framework', 'Pricing and profit templates', 'Instant digital download'],
-    href:      '/academy/mini-importation-guide',
-    cta:       'Get the Guide',
-  },
-];
 
 const WHY = [
   'Practical, not theoretical — built by someone who actually does this',
@@ -39,7 +15,30 @@ const WHY = [
   'Lifetime access to all purchased content',
 ];
 
-export default function AcademyPage() {
+const TYPE_BADGE: Record<string, { label: string; color: string }> = {
+  course:      { label: 'Course',      color: '#3B82F6' },
+  guide:       { label: 'eBook',       color: '#f97316' },
+  template:    { label: 'Template',    color: '#8B5CF6' },
+  bundle:      { label: 'Bundle',      color: '#16A34A' },
+  tool_access: { label: 'Tool Access', color: '#0EA5E9' },
+};
+
+type Product = {
+  id: string; slug: string; title: string; description: string;
+  type: string; price_usd: number; cover_url: string;
+};
+
+export default async function AcademyPage() {
+  const admin = createAdminClient();
+  const { data: products } = await admin
+    .from('platform_products')
+    .select('id, slug, title, description, type, price_usd, cover_url')
+    .eq('is_active', true)
+    .in('section', ['academy', 'both'])
+    .order('sort_order', { ascending: true });
+
+  const items: Product[] = products ?? [];
+
   return (
     <>
       {/* Hero */}
@@ -53,13 +52,13 @@ export default function AcademyPage() {
             Courses and guides built for Nigerian and African entrepreneurs who want real, actionable knowledge on importation, trade, and business growth.
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <a href="#courses" className="fd-btn fd-btn-primary">Browse Courses <ArrowRight size={14} /></a>
+            <a href="#products" className="fd-btn fd-btn-primary">Browse Products <ArrowRight size={14} /></a>
             <Link href="/resources" className="fd-btn fd-btn-outline-white">Free Resources</Link>
           </div>
         </div>
       </section>
 
-      {/* Why learn here */}
+      {/* Why */}
       <section style={{ background: 'var(--fd-bg-alt)', borderBottom: '1px solid var(--fd-border)', padding: '40px 0' }}>
         <div className="fd-container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
@@ -73,43 +72,68 @@ export default function AcademyPage() {
         </div>
       </section>
 
-      {/* Courses */}
-      <section id="courses" className="fd-section">
+      {/* Products */}
+      <section id="products" className="fd-section">
         <div className="fd-container">
           <div className="fd-section-label">Available Now</div>
-          <h2 className="fd-section-title">Courses and guides</h2>
-          <p style={{ color: 'var(--fd-muted)', fontSize: 15, maxWidth: 520, margin: '0 auto 48px', textAlign: 'center', lineHeight: 1.7 }}>
-            Each product is designed to give you a concrete, practised advantage as an importation business owner.
-          </p>
+          <h2 className="fd-section-title">Courses &amp; guides</h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 28, maxWidth: 780, margin: '0 auto' }}>
-            {PRODUCTS.map(({ Icon, badge, badgeColor, title, desc, price, features, href, cta }) => (
-              <div key={title} className="fd-product-card" style={{ display: 'flex', flexDirection: 'column' }}>
-                <div className="fd-product-img" style={{ justifyContent: 'center', gap: 12 }}>
-                  <Icon size={52} color={badgeColor} />
-                  <span className="fd-product-badge" style={{ background: badgeColor }}>{badge}</span>
-                </div>
-                <div className="fd-product-body" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <h2 className="fd-product-title">{title}</h2>
-                  <p className="fd-product-desc">{desc}</p>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: '12px 0 20px', display: 'flex', flexDirection: 'column', gap: 7 }}>
-                    {features.map(f => (
-                      <li key={f} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: 'var(--fd-muted)' }}>
-                        <CheckCircle size={13} color="var(--fd-orange)" style={{ flexShrink: 0 }} />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <div style={{ marginTop: 'auto' }}>
-                    <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--fd-navy)', marginBottom: 14 }}>{price}</div>
-                    <Link href={href} className="fd-btn fd-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                      {cta} <ArrowRight size={14} />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {items.length === 0 ? (
+            <p style={{ textAlign: 'center', color: 'var(--fd-muted)', fontSize: 15 }}>
+              Products coming soon — check back shortly.
+            </p>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 28, maxWidth: 960, margin: '0 auto' }}>
+              {items.map(p => {
+                const badge = TYPE_BADGE[p.type] ?? { label: p.type, color: '#f97316' };
+                const intro = (p.description ?? '').split('\n')[0];
+                return (
+                  <Link
+                    key={p.id}
+                    href={`/academy/${p.slug}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <div className="fd-product-card" style={{ display: 'flex', flexDirection: 'column', height: '100%', cursor: 'pointer' }}>
+                      {/* Cover */}
+                      <div className="fd-product-img" style={{ padding: 0, overflow: 'hidden', position: 'relative', minHeight: 160 }}>
+                        {p.cover_url ? (
+                          <img
+                            src={p.cover_url}
+                            alt={p.title}
+                            style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block' }}
+                          />
+                        ) : (
+                          <div style={{ width: '100%', height: 160, background: 'var(--fd-navy)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <span style={{ fontSize: 36 }}>📦</span>
+                          </div>
+                        )}
+                        <span
+                          className="fd-product-badge"
+                          style={{ position: 'absolute', top: 12, left: 12, background: badge.color }}
+                        >
+                          {badge.label}
+                        </span>
+                      </div>
+
+                      {/* Body */}
+                      <div className="fd-product-body" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <h2 className="fd-product-title">{p.title}</h2>
+                        {intro && <p className="fd-product-desc">{intro}</p>}
+                        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 16 }}>
+                          <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--fd-navy)' }}>
+                            {p.price_usd === 0 ? 'Free' : `$${p.price_usd}`}
+                          </span>
+                          <span className="fd-btn fd-btn-primary fd-btn-sm" style={{ pointerEvents: 'none' }}>
+                            View <ArrowRight size={13} />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
