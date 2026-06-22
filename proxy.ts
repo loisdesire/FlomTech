@@ -48,13 +48,6 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Authenticated user on tracker login/register → tracker dashboard
-  if (user && isTrackerAuthRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/tracker/dashboard';
-    return NextResponse.redirect(url);
-  }
-
   // Authenticated user on /login or /register → route them to the right place
   // (actual per-user routing done client-side; proxy just prevents double-login)
   if (user && isAuthPage) {

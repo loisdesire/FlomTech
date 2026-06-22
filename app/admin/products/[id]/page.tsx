@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, Save, Trash2 } from 'lucide-react';
 import FileUpload from '@/app/admin/FileUpload';
 
-const TYPES      = ['course', 'guide', 'template', 'tool_access', 'bundle'] as const;
+const TYPES      = ['course', 'video', 'ebook', 'guide', 'template', 'tool_access', 'bundle'] as const;
 const CATEGORIES = ['importation', 'business', 'productivity', 'finance', 'marketing', 'logistics'] as const;
 const SECTIONS   = [
   { value: 'academy', label: 'Academy — courses, guides, learning' },

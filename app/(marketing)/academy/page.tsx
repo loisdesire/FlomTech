@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle, BookOpen, GraduationCap, Star } from 'lucide-react';
+import { ArrowRight, BookOpen, GraduationCap, Star } from 'lucide-react';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export const metadata: Metadata = {
@@ -8,15 +8,10 @@ export const metadata: Metadata = {
   description: 'Practical importation education and business courses from Flom Digital.',
 };
 
-const WHY = [
-  'Practical, not theoretical — built by someone who actually does this',
-  'Nigeria and Africa-focused importation strategies',
-  'Step-by-step frameworks you can apply immediately',
-  'Lifetime access to all purchased content',
-];
-
 const TYPE_COLORS: Record<string, string> = {
   course:      'linear-gradient(150deg,#1d3060 0%,#3B82F6 55%,#1e293b 100%)',
+  video:       'linear-gradient(150deg,#1d3060 0%,#3B82F6 55%,#1e293b 100%)',
+  ebook:       'linear-gradient(150deg,#0F172A 0%,#1e3660 55%,#0F172A 100%)',
   guide:       'linear-gradient(150deg,#0F172A 0%,#1e3660 55%,#0F172A 100%)',
   template:    'linear-gradient(150deg,#2d1b69 0%,#7c3aed 55%,#1e1b4b 100%)',
   bundle:      'linear-gradient(150deg,#064e3b 0%,#0f172a 60%,#1a2e22 100%)',
@@ -24,8 +19,8 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 const TYPE_LABEL: Record<string, string> = {
-  course: 'Course', guide: 'eBook / Guide', template: 'Template',
-  bundle: 'Bundle', tool_access: 'Tool Access',
+  course: 'Course', video: 'Video Course', ebook: 'eBook',
+  guide: 'Guide', template: 'Template', bundle: 'Bundle', tool_access: 'Tool Access',
 };
 
 type Product = {
@@ -104,20 +99,6 @@ export default async function AcademyPage() {
         </div>
       </section>
 
-      {/* ── Why ── */}
-      <section style={{ background: 'var(--fd-bg-alt)', borderBottom: '1px solid var(--fd-border)', padding: '36px 0' }}>
-        <div className="fd-container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 14 }}>
-            {WHY.map(point => (
-              <div key={point} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <CheckCircle size={16} color="var(--fd-orange)" style={{ flexShrink: 0, marginTop: 2 }} />
-                <span style={{ fontSize: 13.5, color: 'var(--fd-navy)', lineHeight: 1.6 }}>{point}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Products ── */}
       <section id="products" className="fd-section">
         <div className="fd-container">
@@ -135,16 +116,9 @@ export default async function AcademyPage() {
                 return (
                   <Link key={p.id} href={`/academy/${p.slug}`} style={{ textDecoration: 'none' }}>
                     <div className="fd-product-card">
-                      <div
-                        className="fd-product-cover"
-                        style={{ background: p.cover_url ? undefined : bg, padding: 0 }}
-                      >
+                      <div className="fd-product-cover" style={{ background: p.cover_url ? undefined : bg, padding: 0 }}>
                         {p.cover_url ? (
-                          <img
-                            src={p.cover_url}
-                            alt={p.title}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', position: 'absolute', inset: 0 }}
-                          />
+                          <img src={p.cover_url} alt={p.title} />
                         ) : (
                           <>
                             <div className="fd-product-cover-accent" />
@@ -157,14 +131,27 @@ export default async function AcademyPage() {
 
                       <div className="fd-product-body">
                         <h3 className="fd-product-title">{p.title}</h3>
-                        {intro && <p className="fd-product-desc">{intro}</p>}
-                        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <p style={{
+                          fontSize: 13.5,
+                          color: 'var(--fd-muted)',
+                          lineHeight: 1.6,
+                          margin: 0,
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          minHeight: '43px',
+                        }}>
+                          {intro}
+                        </p>
+                        <div style={{ flex: 1 }} />
+                        <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <span className="fd-product-price" style={{ margin: 0 }}>
                             {p.price_usd === 0 ? 'Free' : `$${p.price_usd}`}
                           </span>
-                          <span className="fd-btn fd-btn-primary fd-btn-sm" style={{ pointerEvents: 'none' }}>
-                            View <ArrowRight size={13} />
-                          </span>
+                          <Link href={`/academy/${p.slug}`} className="fd-btn fd-btn-primary fd-btn-sm">
+                            View details <ArrowRight size={13} />
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -191,7 +178,7 @@ export default async function AcademyPage() {
         </div>
       </section>
 
-      {/* ── Business tools CTA ── */}
+      {/* ── Tools CTA ── */}
       <section className="fd-section">
         <div className="fd-container">
           <div style={{ background: 'var(--fd-navy)', borderRadius: 16, padding: '48px 40px', display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'center', justifyContent: 'space-between' }}>

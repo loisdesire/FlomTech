@@ -1,105 +1,206 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  Truck, FileText, Receipt, DollarSign,
-  LayoutDashboard, ArrowRight,
-} from 'lucide-react';
-import TrustBadgeRow from '@/components/marketing/TrustBadgeRow';
+import { ArrowRight, Wrench, Zap, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Business Tools',
-  description: 'Business tools for serious builders: Landed Cost Calculator, Invoice Generator, Receipt Generator, Currency Converter, and more.',
+  description: 'Free business tools from Flom Digital: Landed Cost Calculator, Invoice Generator, Currency Converter, and more.',
 };
 
 const TOOLS = [
   {
-    Icon: LayoutDashboard,
-    title: 'Sales & Inventory Tracker',
-    desc: 'Full-featured tracker for products, sales, purchases, customers, and reports. Multi-user and multi-currency.',
-    href: '/tracker/login',
-    badge: 'Pro',
-    badgeCls: '',
-  },
-  {
-    Icon: Truck,
+    type:  'Free Tool',
+    cover: 'linear-gradient(150deg,#7c2d12 0%,#ea580c 55%,#431407 100%)',
     title: 'Landed Cost Calculator',
-    desc: 'Full landed cost tool: chargeable weight, freight, customs and duty, total landed cost, profit margin. 36 currencies.',
-    href: '/business-tools/shipping-calculator',
-    badge: '',
-    badgeCls: '',
+    desc:  'Full landed cost tool with chargeable weight, freight, customs and duty, total landed cost, and profit margin. Supports 36 currencies.',
+    href:  '/business-tools/shipping-calculator',
+    badge: 'Free',
+    features: ['Chargeable weight', 'Duty & customs', 'Profit margin', '36 currencies'],
   },
   {
-    Icon: FileText,
+    type:  'Free Tool',
+    cover: 'linear-gradient(150deg,#1d3060 0%,#3B82F6 55%,#1e293b 100%)',
     title: 'Invoice Generator',
-    desc: 'Create professional invoices with your branding, line items, taxes, and discounts. Print or save as PDF.',
-    href: '/business-tools/invoice-generator',
-    badge: '',
-    badgeCls: '',
+    desc:  'Create professional invoices with your branding, line items, taxes, and discounts. Print directly or save as PDF.',
+    href:  '/business-tools/invoice-generator',
+    badge: 'Free',
+    features: ['Custom branding', 'Line items & taxes', 'PDF export', 'Print-ready'],
   },
   {
-    Icon: Receipt,
+    type:  'Free Tool',
+    cover: 'linear-gradient(150deg,#2d1b69 0%,#7c3aed 55%,#1e1b4b 100%)',
     title: 'Receipt Generator',
-    desc: 'Generate clean point-of-sale receipts in seconds. Perfect for market traders and retail businesses.',
-    href: '/business-tools/receipt-generator',
-    badge: '',
-    badgeCls: '',
+    desc:  'Generate clean point-of-sale receipts in seconds. Perfect for market traders, retail businesses, and pop-up shops.',
+    href:  '/business-tools/receipt-generator',
+    badge: 'Free',
+    features: ['POS-style receipts', 'Custom business name', 'Instant print', 'Zero setup'],
   },
   {
-    Icon: DollarSign,
+    type:  'Free Tool',
+    cover: 'linear-gradient(150deg,#064e3b 0%,#0f7a5a 55%,#022c22 100%)',
     title: 'Currency Converter',
-    desc: 'Live exchange rates for USD, GBP, EUR, NGN, CNY, and more. Built for importers dealing in multiple currencies.',
-    href: '/business-tools/currency-converter',
-    badge: '',
-    badgeCls: '',
+    desc:  'Live exchange rates for USD, GBP, EUR, NGN, CNY, and more. Built for importers dealing in multiple currencies daily.',
+    href:  '/business-tools/currency-converter',
+    badge: 'Free',
+    features: ['Live rates', 'USD · GBP · EUR', 'NGN · CNY · GHS', 'Instant convert'],
+  },
+  {
+    type:  'Pro App',
+    cover: 'linear-gradient(150deg,#064e3b 0%,#0f172a 60%,#1a2e22 100%)',
+    title: 'Sales & Inventory Tracker',
+    desc:  'Full-featured business tracker: manage products, sales, purchases, customers, invoices, and reports. Multi-user and multi-currency.',
+    href:  '/tracker/login',
+    badge: 'Pro',
+    features: ['Multi-user', 'Multi-currency', 'Invoices & reports', 'Inventory tracking'],
   },
 ];
 
 export default function BusinessToolsPage() {
   return (
     <>
-      {/* Page hero */}
-      <section className="fd-tool-page-hero">
-        <div className="fd-container">
-          <div className="fd-section-label">Business Tools</div>
-          <h1 className="fd-section-title" style={{ textAlign: 'left', marginBottom: 12 }}>
-            Tools to run your business
-          </h1>
-          <p style={{ fontSize: 16, color: 'var(--fd-muted)', maxWidth: 560, lineHeight: 1.7, margin: 0 }}>
-            Everything a growing business needs, built by Flom Digital.
-          </p>
+      {/* ── Hero ── */}
+      <section className="fd-hero">
+        <div className="fd-hero-inner">
+          <div>
+            <span className="fd-hero-eyebrow">Business Tools</span>
+            <h1 className="fd-hero-headline">
+              Tools to run<br />
+              <span className="accent">your business.</span>
+            </h1>
+            <p className="fd-hero-sub">
+              Everything a growing business needs — calculators, invoicing, receipts,
+              currency conversion, and a full inventory tracker. Most are completely free.
+            </p>
+            <div className="fd-hero-ctas">
+              <a href="#tools" className="fd-btn fd-btn-primary">Explore Tools <ArrowRight size={16} /></a>
+              <Link href="/academy" className="fd-btn fd-btn-outline-white">View Academy</Link>
+            </div>
+          </div>
+
+          <div className="fd-hero-visual">
+            <div className="fd-hero-visual-inner">
+              <div className="fd-hero-card">
+                <div className="fd-hero-card-icon" style={{ background: '#ea580c' }}>
+                  <Wrench size={20} color="#fff" />
+                </div>
+                <div>
+                  <div className="fd-hero-card-title">Built for importers</div>
+                  <div className="fd-hero-card-sub">Duty · freight · profit in one place</div>
+                </div>
+              </div>
+              <div className="fd-hero-card">
+                <div className="fd-hero-card-icon" style={{ background: '#16a34a' }}>
+                  <Zap size={20} color="#fff" />
+                </div>
+                <div>
+                  <div className="fd-hero-card-title">No sign-up needed</div>
+                  <div className="fd-hero-card-sub">Most tools open instantly in your browser</div>
+                </div>
+              </div>
+              <div className="fd-hero-stat-row">
+                <div className="fd-hero-stat">
+                  <div className="fd-hero-stat-val">5</div>
+                  <div className="fd-hero-stat-lbl">Tools</div>
+                </div>
+                <div className="fd-hero-stat">
+                  <div className="fd-hero-stat-val">4</div>
+                  <div className="fd-hero-stat-lbl">Free</div>
+                </div>
+                <div className="fd-hero-stat">
+                  <div className="fd-hero-stat-val">36</div>
+                  <div className="fd-hero-stat-lbl">Currencies</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Tools grid */}
-      <section className="fd-section">
+      {/* ── Tools ── */}
+      <section id="tools" className="fd-section">
         <div className="fd-container">
-          <div className="fd-tools-grid">
-            {TOOLS.map(({ Icon, title, desc, href, badge, badgeCls }) => (
-              <Link key={title} href={href} className="fd-tool-card">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div className="fd-tool-icon">
-                    <Icon size={22} />
+          <div className="fd-section-label">Available Now</div>
+          <h2 className="fd-section-title" style={{ textAlign: 'left', marginBottom: 36 }}>All tools</h2>
+
+          <div className="fd-products-grid">
+            {TOOLS.map(t => (
+              <Link key={t.title} href={t.href} style={{ textDecoration: 'none' }}>
+                <div className="fd-product-card">
+                  {/* Cover */}
+                  <div className="fd-product-cover" style={{ background: t.cover, padding: 0 }}>
+                    <div className="fd-product-cover-accent" />
+                    <div className="fd-product-cover-label">{t.type}</div>
+                    <div className="fd-product-cover-title">{t.title}</div>
+                    <span
+                      className="fd-product-cover-badge"
+                      style={{ background: t.badge === 'Free' ? '#16a34a' : '#7c3aed' }}
+                    >
+                      {t.badge}
+                    </span>
                   </div>
-                  <h2 className="fd-tool-title" style={{ fontSize: 15 }}>
-                    {title}
-                    {badge && (
-                      <span className={`fd-product-badge ${badgeCls}`} style={{ position: 'static', marginLeft: 4 }}>
-                        {badge}
+
+                  {/* Body */}
+                  <div className="fd-product-body">
+                    <h3 className="fd-product-title">{t.title}</h3>
+                    <p style={{
+                      fontSize: 13.5,
+                      color: 'var(--fd-muted)',
+                      lineHeight: 1.6,
+                      margin: 0,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      minHeight: '43px',
+                    }}>
+                      {t.desc}
+                    </p>
+
+                    {/* Feature pills */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, margin: '14px 0 0' }}>
+                      {t.features.map(f => (
+                        <span key={f} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--fd-muted)', background: 'var(--fd-bg-alt)', border: '1px solid var(--fd-border)', borderRadius: 5, padding: '3px 8px' }}>
+                          <CheckCircle size={10} color="var(--fd-orange)" />
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div style={{ flex: 1 }} />
+                    <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: 18, fontWeight: 800, color: t.badge === 'Free' ? '#16a34a' : 'var(--fd-navy)' }}>
+                        {t.badge === 'Free' ? 'Free' : 'Sign in'}
                       </span>
-                    )}
-                  </h2>
+                      <span className="fd-btn fd-btn-primary fd-btn-sm" style={{ pointerEvents: 'none' }}>
+                        Open tool <ArrowRight size={13} />
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <p className="fd-tool-desc">{desc}</p>
-                <span className="fd-tool-cta">
-                  Open tool <ArrowRight size={14} />
-                </span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <TrustBadgeRow />
+      {/* ── Academy CTA ── */}
+      <section className="fd-section" style={{ background: 'var(--fd-bg-alt)', borderTop: '1px solid var(--fd-border)' }}>
+        <div className="fd-container">
+          <div style={{ background: 'var(--fd-navy)', borderRadius: 16, padding: '48px 40px', display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <h3 style={{ fontSize: 'clamp(18px,3vw,24px)', fontWeight: 800, color: '#fff', margin: '0 0 10px' }}>
+                Learn how to use these tools properly
+              </h3>
+              <p style={{ color: 'rgba(255,255,255,.65)', fontSize: 14, margin: 0, lineHeight: 1.7, maxWidth: 400 }}>
+                The Academy teaches you the importation strategies that make these tools most effective.
+              </p>
+            </div>
+            <Link href="/academy" className="fd-btn fd-btn-primary" style={{ whiteSpace: 'nowrap' }}>
+              Visit Academy <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
