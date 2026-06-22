@@ -37,7 +37,6 @@ export async function POST(request: Request) {
   if (!bucket) return jsonError(`File type "${file.type}" is not allowed.`);
 
   // Build a unique, collision-proof storage path
-  const ext      = file.name.split('.').pop()?.toLowerCase() ?? 'bin';
   const safeName = file.name.replace(/[^a-z0-9.\-_]/gi, '-').toLowerCase();
   const path     = [folder, `${Date.now()}-${safeName}`].filter(Boolean).join('/');
 

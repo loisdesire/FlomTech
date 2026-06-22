@@ -183,7 +183,6 @@ export default function NewBlogPostPage() {
                 currentUrl={form.cover_url}
                 onUpload={url => set('cover_url', url)}
               />
-              </div>
             </div>
           </div>
         </div>
