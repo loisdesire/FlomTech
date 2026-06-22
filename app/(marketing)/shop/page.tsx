@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Zap } from 'lucide-react';
+import BuyButton from '@/components/BuyButton';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export const metadata: Metadata = {
@@ -107,35 +108,34 @@ export default async function ShopPage() {
                 const bg = TYPE_COLORS[p.type] ?? TYPE_COLORS.guide;
                 const intro = (p.description ?? '').split('\n')[0];
                 return (
-                  <Link key={p.id} href={`/academy/${p.slug}`} style={{ textDecoration: 'none' }}>
-                    <div className="fd-product-card">
-                      <div className="fd-product-cover" style={{ background: p.cover_url ? undefined : bg, padding: 0 }}>
-                        {p.cover_url ? <img src={p.cover_url} alt={p.title} /> : (
-                          <>
-                            <div className="fd-product-cover-accent" />
-                            <div className="fd-product-cover-label">{typeLabel}</div>
-                            <div className="fd-product-cover-title">{p.title}</div>
-                          </>
-                        )}
-                        <span className="fd-product-cover-badge">{typeLabel}</span>
-                      </div>
-                      <div className="fd-product-body">
-                        <h3 className="fd-product-title">{p.title}</h3>
-                        <p style={{ fontSize: 13.5, color: 'var(--fd-muted)', lineHeight: 1.6, margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '43px' }}>
-                          {intro}
-                        </p>
-                        <div style={{ flex: 1 }} />
-                        <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <span className="fd-product-price" style={{ margin: 0 }}>
-                            {p.price_usd === 0 ? 'Free' : `$${p.price_usd}`}
-                          </span>
-                          <Link href={`/academy/${p.slug}`} className="fd-btn fd-btn-primary fd-btn-sm">
-                            Buy now <ArrowRight size={13} />
-                          </Link>
-                        </div>
+                  <div key={p.id} className="fd-product-card">
+                    <div className="fd-product-cover" style={{ background: p.cover_url ? undefined : bg, padding: 0 }}>
+                      {p.cover_url ? <img src={p.cover_url} alt={p.title} /> : (
+                        <>
+                          <div className="fd-product-cover-accent" />
+                          <div className="fd-product-cover-label">{typeLabel}</div>
+                          <div className="fd-product-cover-title">{p.title}</div>
+                        </>
+                      )}
+                      <span className="fd-product-cover-badge">{typeLabel}</span>
+                    </div>
+                    <div className="fd-product-body">
+                      <h3 className="fd-product-title">{p.title}</h3>
+                      <p style={{ fontSize: 13.5, color: 'var(--fd-muted)', lineHeight: 1.6, margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '43px' }}>
+                        {intro}
+                      </p>
+                      <div style={{ flex: 1 }} />
+                      <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span className="fd-product-price" style={{ margin: 0 }}>
+                          {p.price_usd === 0 ? 'Free' : `$${p.price_usd}`}
+                        </span>
+                        {p.price_usd === 0
+                          ? <Link href={`/shop/${p.slug}`} className="fd-btn fd-btn-primary fd-btn-sm">Get free <ArrowRight size={13} /></Link>
+                          : <BuyButton slug={p.slug} price={p.price_usd} />
+                        }
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
