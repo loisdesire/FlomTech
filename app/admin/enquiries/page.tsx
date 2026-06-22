@@ -84,7 +84,7 @@ export default function AdminEnquiriesPage() {
                       <tr key={e.id} style={{ cursor: 'pointer' }} onClick={() => setExpanded(expanded === e.id ? null : e.id)}>
                         <td>
                           <div className="adm-table-title">{e.name}</div>
-                          <div style={{ fontSize: 12, color: '#9ca3af' }}>{e.email}</div>
+                          <a href={`mailto:${e.email}`} style={{ fontSize: 12, color: '#6b7280', textDecoration: 'none' }} onClick={ev => ev.stopPropagation()}>{e.email}</a>
                           {e.phone && <div style={{ fontSize: 12, color: '#9ca3af' }}>{e.phone}</div>}
                         </td>
                         <td style={{ color: '#6b7280' }}>{e.service_type || 'General'}</td>

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import '../admin.css';
 import { ExternalLink } from 'lucide-react';
 import AdminNav from './AdminNav';
+import AdminSignOut from './AdminSignOut';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -24,10 +25,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <AdminNav />
 
         <div className="adm-sidebar-footer">
+          <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 10 }}>{user.email}</div>
           <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,.35)', textDecoration: 'none', fontSize: 12 }}>
             <ExternalLink size={12} /> View site
           </Link>
-          <div style={{ marginTop: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</div>
+          <AdminSignOut />
         </div>
       </aside>
 

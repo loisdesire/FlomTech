@@ -1,26 +1,47 @@
-import Link from 'next/link';
-import { createAdminClient } from '@/lib/supabase/admin';
-import { Plus, FileText, Edit } from 'lucide-react';
+'use client';
 
-async function getPosts() {
-  const admin = createAdminClient();
-  const { data } = await admin
-    .from('blog_posts')
-    .select('id, slug, title, category, status, read_time_min, published_at, created_at')
-    .order('created_at', { ascending: false });
-  return (data ?? []) as {
-    id: string; slug: string; title: string; category: string;
-    status: string; read_time_min: number; published_at: string | null; created_at: string;
-  }[];
-}
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Plus, FileText, Edit, ToggleLeft, ToggleRight } from 'lucide-react';
+
+type Post = {
+  id: string; slug: string; title: string; category: string;
+  status: string; read_time_min: number; published_at: string | null; created_at: string;
+};
 
 function fmtDate(iso: string | null) {
   if (!iso) return '—';
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-export default async function AdminBlogPage() {
-  const posts = await getPosts();
+export default function AdminBlogPage() {
+  const [posts, setPosts]   = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving]   = useState<string | null>(null);
+  const [msg, setMsg]         = useState('');
+
+  useEffect(() => {
+    fetch('/api/admin/blog')
+      .then(r => r.json())
+      .then(d => { setPosts(d); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  async function toggleStatus(id: string, current: string) {
+    setSaving(id);
+    const next = current === 'published' ? 'draft' : 'published';
+    const res = await fetch(`/api/admin/blog/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: next }),
+    });
+    if (res.ok) {
+      setPosts(prev => prev.map(p => p.id === id ? { ...p, status: next, published_at: next === 'published' ? new Date().toISOString() : p.published_at } : p));
+      setMsg(`Post ${next === 'published' ? 'published' : 'unpublished'}.`);
+      setTimeout(() => setMsg(''), 3000);
+    }
+    setSaving(null);
+  }
 
   return (
     <>
@@ -32,8 +53,12 @@ export default async function AdminBlogPage() {
       </div>
 
       <div className="adm-page">
+        {msg && <div className="adm-alert adm-alert-success">{msg}</div>}
+
         <div className="adm-card" style={{ padding: 0, overflow: 'hidden' }}>
-          {posts.length === 0 ? (
+          {loading ? (
+            <div className="adm-empty"><p>Loading...</p></div>
+          ) : posts.length === 0 ? (
             <div className="adm-empty">
               <FileText size={36} style={{ margin: '0 auto 12px', display: 'block', opacity: .3 }} />
               <p style={{ margin: '0 0 16px' }}>No blog posts yet</p>
@@ -51,7 +76,7 @@ export default async function AdminBlogPage() {
                     <th>Status</th>
                     <th>Read time</th>
                     <th>Published</th>
-                    <th>Created</th>
+                    <th>Toggle</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -66,7 +91,18 @@ export default async function AdminBlogPage() {
                       <td><span className={`adm-badge adm-badge-${post.status}`}>{post.status}</span></td>
                       <td style={{ color: '#6b7280' }}>{post.read_time_min} min</td>
                       <td style={{ color: '#6b7280', fontSize: 12 }}>{fmtDate(post.published_at)}</td>
-                      <td style={{ color: '#9ca3af', fontSize: 12 }}>{fmtDate(post.created_at)}</td>
+                      <td>
+                        <button
+                          className="adm-btn adm-btn-ghost adm-btn-sm"
+                          disabled={saving === post.id}
+                          onClick={() => toggleStatus(post.id, post.status)}
+                          title={post.status === 'published' ? 'Unpublish' : 'Publish'}
+                        >
+                          {post.status === 'published'
+                            ? <ToggleRight size={20} color="#15803d" />
+                            : <ToggleLeft  size={20} color="#9ca3af" />}
+                        </button>
+                      </td>
                       <td>
                         <Link href={`/admin/blog/${post.id}`} className="adm-btn adm-btn-ghost adm-btn-sm">
                           <Edit size={13} /> Edit

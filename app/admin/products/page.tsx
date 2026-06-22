@@ -90,7 +90,6 @@ export default function AdminProductsPage() {
                     <th>Type</th>
                     <th>Section</th>
                     <th>Price (USD)</th>
-                    <th>Status</th>
                     <th>Toggle</th>
                     <th></th>
                   </tr>
@@ -118,11 +117,6 @@ export default function AdminProductsPage() {
                             if (!isNaN(val) && val !== p.price_usd) updatePrice(p.id, val);
                           }}
                         />
-                      </td>
-                      <td>
-                        <span className={`adm-badge adm-badge-${p.is_active ? 'active' : 'inactive'}`}>
-                          {p.is_active ? 'Active' : 'Inactive'}
-                        </span>
                       </td>
                       <td>
                         <button

@@ -1,22 +1,22 @@
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { FileText, Package, MessageSquare, ArrowRight, Clock, TrendingUp } from 'lucide-react';
+import { FileText, Package, MessageSquare, ArrowRight, Clock, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
 
 async function getStats() {
   const admin = createAdminClient();
   const [posts, products, enquiries] = await Promise.all([
-    admin.from('blog_posts').select('status'),
-    admin.from('platform_products').select('is_active'),
+    admin.from('blog_posts').select('id, title, status'),
+    admin.from('platform_products').select('id, title, is_active'),
     admin.from('service_enquiries').select('status'),
   ]);
 
-  const postRows      = (posts.data      ?? []) as { status: string }[];
-  const productRows   = (products.data   ?? []) as { is_active: boolean }[];
+  const postRows      = (posts.data      ?? []) as { id: string; title: string; status: string }[];
+  const productRows   = (products.data   ?? []) as { id: string; title: string; is_active: boolean }[];
   const enquiryRows   = (enquiries.data  ?? []) as { status: string }[];
 
   return {
-    posts:      { total: postRows.length,    published: postRows.filter(p => p.status === 'published').length,  drafts: postRows.filter(p => p.status === 'draft').length },
-    products:   { total: productRows.length, active: productRows.filter(p => p.is_active).length },
+    posts:      { total: postRows.length, published: postRows.filter(p => p.status === 'published').length, drafts: postRows.filter(p => p.status === 'draft').length, draftList: postRows.filter(p => p.status === 'draft').slice(0, 4) },
+    products:   { total: productRows.length, active: productRows.filter(p => p.is_active).length, inactiveCount: productRows.filter(p => !p.is_active).length },
     enquiries:  { total: enquiryRows.length, newCount: enquiryRows.filter(e => e.status === 'new').length },
   };
 }
@@ -84,20 +84,40 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        {/* Quick actions */}
+        {/* Needs attention */}
         <div className="adm-card">
-          <div className="adm-card-title">Quick actions</div>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <Link href="/admin/blog/new" className="adm-btn adm-btn-primary">
-              <FileText size={14} /> New Blog Post
-            </Link>
-            <Link href="/admin/products" className="adm-btn adm-btn-navy">
-              <Package size={14} /> Manage Products
-            </Link>
-            <Link href="/admin/enquiries" className="adm-btn adm-btn-outline">
-              <MessageSquare size={14} /> View Enquiries
-            </Link>
-          </div>
+          <div className="adm-card-title">Needs attention</div>
+          {stats.posts.drafts === 0 && stats.products.inactiveCount === 0 ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#16a34a', fontSize: 13 }}>
+              <CheckCircle size={15} /> Everything is published and active — nothing to action.
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {stats.posts.drafts > 0 && (
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: '#b45309', marginBottom: 8 }}>
+                    <AlertCircle size={13} /> {stats.posts.drafts} unpublished {stats.posts.drafts === 1 ? 'post' : 'posts'}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    {stats.posts.draftList.map(p => (
+                      <Link key={p.id} href={`/admin/blog/${p.id}`} style={{ fontSize: 13, color: '#374151', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', background: '#fef3c7', borderRadius: 6 }}>
+                        <span>{p.title}</span>
+                        <span style={{ fontSize: 11, color: '#b45309', fontWeight: 600 }}>Publish →</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {stats.products.inactiveCount > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', background: '#fee2e2', borderRadius: 6 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#b91c1c' }}>
+                    <AlertCircle size={13} /> {stats.products.inactiveCount} inactive {stats.products.inactiveCount === 1 ? 'product' : 'products'} hidden from the site
+                  </div>
+                  <Link href="/admin/products" style={{ fontSize: 11, fontWeight: 600, color: '#b91c1c', textDecoration: 'none' }}>Review →</Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Recent enquiries */}
