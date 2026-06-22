@@ -2,23 +2,14 @@ import { requireAdmin } from '@/lib/admin-auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { jsonOk, jsonError } from '@/lib/api-helpers';
 
-// 50 MB for images, 5 GB for videos/PDFs — enforced at bucket level too
-const MAX_BYTES = 5 * 1024 * 1024 * 1024;
+const MAX_BYTES = 5 * 1024 * 1024 * 1024; // 5 GB hard cap
 
-const ALLOWED_TYPES: Record<string, string> = {
-  // images
-  'image/jpeg': 'media',
-  'image/png':  'media',
-  'image/webp': 'media',
-  'image/gif':  'media',
-  'image/svg+xml': 'media',
-  // documents
-  'application/pdf': 'course-content',
-  // video
-  'video/mp4':       'course-content',
-  'video/webm':      'course-content',
-  'video/quicktime': 'course-content',
-};
+// Dangerous executable types that should never be stored
+const BLOCKED = new Set([
+  'application/x-msdownload', 'application/x-executable',
+  'application/x-sh', 'application/x-bat',
+  'application/x-msdos-program',
+]);
 
 export async function POST(request: Request) {
   const { error } = await requireAdmin();
@@ -31,12 +22,13 @@ export async function POST(request: Request) {
   const folder = (formData.get('folder') as string | null) ?? '';
 
   if (!file || file.size === 0) return jsonError('No file provided.');
-  if (file.size > MAX_BYTES)    return jsonError('File exceeds 5 GB limit.');
+  if (file.size > MAX_BYTES)    return jsonError('File exceeds the 5 GB limit.');
+  if (BLOCKED.has(file.type))   return jsonError('This file type is not allowed.');
 
-  const bucket = ALLOWED_TYPES[file.type];
-  if (!bucket) return jsonError(`File type "${file.type}" is not allowed.`);
+  // Images go to the public media bucket; everything else is private course-content
+  const isImage = file.type.startsWith('image/');
+  const bucket  = isImage ? 'media' : 'course-content';
 
-  // Build a unique, collision-proof storage path
   const safeName = file.name.replace(/[^a-z0-9.\-_]/gi, '-').toLowerCase();
   const path     = [folder, `${Date.now()}-${safeName}`].filter(Boolean).join('/');
 
@@ -49,7 +41,6 @@ export async function POST(request: Request) {
 
   if (storageErr) return jsonError(storageErr.message);
 
-  // Public URL for media bucket; signed URL (1 year) for course-content
   let url: string;
   if (bucket === 'media') {
     const { data: pub } = admin.storage.from(bucket).getPublicUrl(data.path);
@@ -57,8 +48,8 @@ export async function POST(request: Request) {
   } else {
     const { data: signed, error: signErr } = await admin.storage
       .from(bucket)
-      .createSignedUrl(data.path, 60 * 60 * 24 * 365); // 1 year
-    if (signErr || !signed) return jsonError('Uploaded but failed to create signed URL.');
+      .createSignedUrl(data.path, 60 * 60 * 24 * 365);
+    if (signErr || !signed) return jsonError('Uploaded but could not create signed URL.');
     url = signed.signedUrl;
   }
 

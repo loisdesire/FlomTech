@@ -8,10 +8,15 @@ import FileUpload from '@/app/admin/FileUpload';
 
 const TYPES      = ['course', 'guide', 'template', 'tool_access', 'bundle'] as const;
 const CATEGORIES = ['importation', 'business', 'productivity', 'finance', 'marketing', 'logistics'] as const;
+const SECTIONS   = [
+  { value: 'academy', label: 'Academy — courses, guides, learning' },
+  { value: 'shop',    label: 'Shop — downloadable tools, templates' },
+  { value: 'both',    label: 'Both pages' },
+] as const;
 
 type Product = {
   id: string; slug: string; title: string; description: string;
-  type: string; category: string; price_usd: number;
+  type: string; category: string; section: string; price_usd: number;
   cover_url: string; file_url: string; is_active: boolean; sort_order: number;
 };
 
@@ -31,7 +36,10 @@ export default function EditProductPage() {
   const isNew = id === 'new';
 
   useEffect(() => {
-    if (isNew) { setForm({ type: 'course', category: 'importation', is_active: false, sort_order: 99, price_usd: 0, cover_url: '', file_url: '' }); return; }
+    if (isNew) {
+      setForm({ type: 'course', category: 'importation', section: 'academy', is_active: false, sort_order: 99, price_usd: 0, cover_url: '', file_url: '' });
+      return;
+    }
     fetch(`/api/admin/products/${id}`)
       .then(r => r.json())
       .then((d: Product) => setForm(d))
@@ -74,8 +82,6 @@ export default function EditProductPage() {
     router.push('/admin/products');
   }
 
-  const fileType = form.type === 'course' ? 'video' : form.type === 'guide' || form.type === 'template' ? 'pdf' : 'any';
-
   return (
     <>
       <div className="adm-topbar">
@@ -102,12 +108,16 @@ export default function EditProductPage() {
         {success && <div className="adm-alert adm-alert-success">{success}</div>}
 
         <div className="adm-form-grid">
-          {/* Main fields */}
+          {/* ── Main fields ── */}
           <div style={{ gridColumn: '1 / -1' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div className="adm-field">
                 <label>Title</label>
-                <input type="text" value={form.title ?? ''} onChange={e => { set('title', e.target.value); if (!form.slug || isNew) set('slug', slugify(e.target.value)); }} />
+                <input
+                  type="text"
+                  value={form.title ?? ''}
+                  onChange={e => { set('title', e.target.value); if (!form.slug || isNew) set('slug', slugify(e.target.value)); }}
+                />
               </div>
               <div className="adm-field">
                 <label>Slug</label>
@@ -118,45 +128,62 @@ export default function EditProductPage() {
 
             <div className="adm-field">
               <label>Description</label>
-              <textarea rows={3} value={form.description ?? ''} onChange={e => set('description', e.target.value)} placeholder="What's inside this product?" />
+              <textarea
+                rows={4}
+                value={form.description ?? ''}
+                onChange={e => set('description', e.target.value)}
+                placeholder={`First line = intro paragraph on the product page.\nEach line after = one benefit bullet.\n\nExample:\nLearn to import profitably from China and Dubai.\nFind winning products before spending a penny\nNegotiate with verified suppliers confidently`}
+              />
+              <div className="adm-field-hint">First line is the intro. Each additional line becomes a benefit bullet on the squeeze page.</div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
               <div className="adm-field">
                 <label>Type</label>
                 <select value={form.type ?? 'course'} onChange={e => set('type', e.target.value)}>
-                  {TYPES.map(t => <option key={t} value={t}>{t.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>)}
+                  {TYPES.map(t => (
+                    <option key={t} value={t}>{t.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</option>
+                  ))}
                 </select>
               </div>
               <div className="adm-field">
                 <label>Category</label>
                 <select value={form.category ?? 'importation'} onChange={e => set('category', e.target.value)}>
-                  {CATEGORIES.map(c => <option key={c} value={c}>{c.replace(/\b\w/g, l => l.toUpperCase())}</option>)}
+                  {CATEGORIES.map(c => (
+                    <option key={c} value={c}>{c.replace(/\b\w/g, (l: string) => l.toUpperCase())}</option>
+                  ))}
                 </select>
               </div>
               <div className="adm-field">
                 <label>Price (USD)</label>
                 <input type="number" min={0} step={0.01} value={form.price_usd ?? 0} onChange={e => set('price_usd', parseFloat(e.target.value) || 0)} />
               </div>
+              <div className="adm-field">
+                <label>Sort order</label>
+                <input type="number" min={0} value={form.sort_order ?? 99} onChange={e => set('sort_order', parseInt(e.target.value, 10) || 0)} />
+                <div className="adm-field-hint">1 shows first, 2 next, etc.</div>
+              </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div className="adm-field">
+                <label>Where to feature</label>
+                <select value={form.section ?? 'academy'} onChange={e => set('section', e.target.value)}>
+                  {SECTIONS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                </select>
+                <div className="adm-field-hint">Controls which page this product appears on</div>
+              </div>
+              <div className="adm-field">
                 <label>Active</label>
                 <select value={form.is_active ? 'true' : 'false'} onChange={e => set('is_active', e.target.value === 'true')}>
                   <option value="true">Yes — visible on site</option>
-                  <option value="false">No — hidden</option>
+                  <option value="false">No — hidden (draft)</option>
                 </select>
-              </div>
-              <div className="adm-field">
-                <label>Sort order</label>
-                <input type="number" min={0} value={form.sort_order ?? 99} onChange={e => set('sort_order', parseInt(e.target.value, 10) || 0)} />
-                <div className="adm-field-hint">Lower numbers appear first</div>
               </div>
             </div>
           </div>
 
-          {/* File uploads */}
+          {/* ── Cover image ── */}
           <div>
             <div className="adm-card">
               <div className="adm-card-title">Cover image</div>
@@ -170,24 +197,20 @@ export default function EditProductPage() {
             </div>
           </div>
 
+          {/* ── Content file ── */}
           <div>
             <div className="adm-card">
-              <div className="adm-card-title">
-                {form.type === 'course' ? 'Course video' : form.type === 'guide' || form.type === 'template' ? 'Downloadable file (PDF)' : 'Content file'}
-              </div>
+              <div className="adm-card-title">Content</div>
               <FileUpload
                 label=""
-                type={fileType as 'video' | 'pdf' | 'any'}
-                folder={form.type === 'course' ? 'videos' : 'files'}
+                type="any"
+                folder="content"
                 currentUrl={form.file_url ?? ''}
                 onUpload={url => set('file_url', url)}
               />
-              {form.type === 'course' && (
-                <p style={{ fontSize: 11, color: '#9ca3af', marginTop: 8, lineHeight: 1.6 }}>
-                  Videos are stored privately. Members get a secure link that expires after 1 year.
-                  Supported: MP4, WebM. Up to 5 GB.
-                </p>
-              )}
+              <p style={{ fontSize: 11, color: '#9ca3af', marginTop: 10, lineHeight: 1.65 }}>
+                Any file type — MP4, PDF, Excel, Word, audio, ZIP, etc. Images are public; everything else is delivered via a private secure link. Max 5 GB.
+              </p>
             </div>
           </div>
         </div>

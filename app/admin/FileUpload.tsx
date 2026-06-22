@@ -9,14 +9,14 @@ const ACCEPT: Record<FileType, string> = {
   image: 'image/jpeg,image/png,image/webp,image/gif,image/svg+xml',
   video: 'video/mp4,video/webm,video/quicktime',
   pdf:   'application/pdf',
-  any:   'image/*,video/*,application/pdf',
+  any:   '*',  // any file type
 };
 
 const LABELS: Record<FileType, string> = {
   image: 'image (JPG, PNG, WebP)',
   video: 'video (MP4, WebM)',
   pdf:   'PDF document',
-  any:   'image, video, or PDF',
+  any:   'any file — PDF, Excel, Word, audio, MP4, ZIP…',
 };
 
 function FileIcon({ type }: { type: FileType }) {

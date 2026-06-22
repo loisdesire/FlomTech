@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   if (!body.title) return jsonError('Title is required.');
   if (!body.slug)  return jsonError('Slug is required.');
 
-  const ALLOWED = new Set(['slug','title','description','type','category','price_usd','stripe_price_id','cover_url','file_url','is_active','sort_order']);
+  const ALLOWED = new Set(['slug','title','description','type','category','section','price_usd','stripe_price_id','cover_url','file_url','is_active','sort_order']);
   const safeBody = Object.fromEntries(Object.entries(body).filter(([k]) => ALLOWED.has(k)));
 
   const admin = createAdminClient();
