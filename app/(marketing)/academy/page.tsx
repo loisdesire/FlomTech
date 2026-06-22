@@ -58,7 +58,7 @@ export default async function AcademyPage() {
             <span className="fd-hero-eyebrow">Flom Academy</span>
             <h1 className="fd-hero-headline">
               Learn the business<br />
-              <span className="accent">of importation.</span>
+              of importation.
             </h1>
             <p className="fd-hero-sub">
               Practical courses and guides built for Nigerian and African
@@ -73,18 +73,20 @@ export default async function AcademyPage() {
           {/* Right — bento feature grid */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: 'auto auto auto', gap: 8 }}>
 
-            {/* Cell 1 — large, white, lifetime access */}
+            {/* Cell 1 — large, dark glass, lifetime access */}
             <div style={{
               gridRow: '1 / 3',
-              background: '#fff', borderRadius: 14,
+              background: 'rgba(255,255,255,.06)',
+              border: '1px solid rgba(255,255,255,.1)',
+              borderRadius: 14,
               padding: '28px 22px',
               display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
             }}>
               <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--fd-orange)' }}>
                 Lifetime access
               </span>
-              <div style={{ fontSize: 68, fontWeight: 900, color: 'var(--fd-navy)', lineHeight: 1, margin: '12px 0' }}>∞</div>
-              <p style={{ fontSize: 12.5, color: 'var(--fd-muted)', lineHeight: 1.6, margin: 0 }}>
+              <div style={{ fontSize: 68, fontWeight: 900, color: '#fff', lineHeight: 1, margin: '12px 0' }}>∞</div>
+              <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,.5)', lineHeight: 1.6, margin: 0 }}>
                 Buy once. Your content is there whenever you need it — no expiry.
               </p>
             </div>
