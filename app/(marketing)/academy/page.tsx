@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle, MapPin, Zap } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export const metadata: Metadata = {
@@ -70,28 +70,30 @@ export default async function AcademyPage() {
             </div>
           </div>
 
-          {/* Right — bento feature grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: 'auto auto auto', gap: 8 }}>
+          {/* Right — 2×2 bento grid: alternating dark glass / orange glass */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
 
-            {/* Cell 1 — large, dark glass, lifetime access */}
+            {/* Cell 1 — dark glass: ∞ lifetime access (compact, icon inline) */}
             <div style={{
-              gridRow: '1 / 3',
               background: 'rgba(255,255,255,.06)',
               border: '1px solid rgba(255,255,255,.1)',
-              borderRadius: 14,
-              padding: '28px 22px',
-              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+              borderRadius: 14, padding: '18px 20px',
+              display: 'flex', alignItems: 'center', gap: 12,
             }}>
-              <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--fd-orange)' }}>
-                Lifetime access
-              </span>
-              <div style={{ fontSize: 68, fontWeight: 900, color: '#fff', lineHeight: 1, margin: '12px 0' }}>∞</div>
-              <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,.5)', lineHeight: 1.6, margin: 0 }}>
-                Buy once. Your content is there whenever you need it — no expiry.
-              </p>
+              <div style={{
+                width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                background: 'rgba(255,255,255,.1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <span style={{ fontSize: 18, fontWeight: 900, color: '#fff', lineHeight: 1 }}>∞</span>
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Lifetime access</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,.45)' }}>Buy once. Keep forever.</div>
+              </div>
             </div>
 
-            {/* Cell 2 — stat: chapters */}
+            {/* Cell 2 — orange glass: 22+ big stat */}
             <div style={{
               background: 'rgba(249,115,22,.12)',
               border: '1px solid rgba(249,115,22,.25)',
@@ -103,7 +105,7 @@ export default async function AcademyPage() {
               </div>
             </div>
 
-            {/* Cell 3 — Africa-focused */}
+            {/* Cell 3 — dark glass: Africa-first (icon inline) */}
             <div style={{
               background: 'rgba(255,255,255,.06)',
               border: '1px solid rgba(255,255,255,.1)',
@@ -111,11 +113,11 @@ export default async function AcademyPage() {
               display: 'flex', alignItems: 'center', gap: 12,
             }}>
               <div style={{
-                width: 36, height: 36, borderRadius: 10,
-                background: 'rgba(249,115,22,.15)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                background: 'rgba(255,255,255,.1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <MapPin size={18} color="var(--fd-orange)" />
+                <MapPin size={18} color="#fff" />
               </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Africa-first</div>
@@ -123,21 +125,16 @@ export default async function AcademyPage() {
               </div>
             </div>
 
-            {/* Cell 4 — full-width bottom: practical */}
+            {/* Cell 4 — orange glass: 100% practical big stat */}
             <div style={{
-              gridColumn: '1 / 3',
-              background: 'var(--fd-orange)',
-              borderRadius: 14, padding: '16px 22px',
-              display: 'flex', alignItems: 'center', gap: 14,
+              background: 'rgba(249,115,22,.12)',
+              border: '1px solid rgba(249,115,22,.25)',
+              borderRadius: 14, padding: '20px',
             }}>
-              <Zap size={20} color="#fff" fill="#fff" style={{ flexShrink: 0 }} />
-              <div>
-                <div style={{ fontSize: 13.5, fontWeight: 700, color: '#fff' }}>Practical, not theoretical</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,.75)', marginTop: 2 }}>
-                  Built by someone who actually runs an importation business
-                </div>
+              <div style={{ fontSize: 42, fontWeight: 900, color: 'var(--fd-orange)', lineHeight: 1 }}>100%</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 8, lineHeight: 1.4 }}>
+                Practical — no theory, just results
               </div>
-              <CheckCircle size={18} color="rgba(255,255,255,.6)" style={{ marginLeft: 'auto', flexShrink: 0 }} />
             </div>
 
           </div>
