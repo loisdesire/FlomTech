@@ -73,17 +73,22 @@ export default async function AcademyPage() {
           {/* Right — bento: lifetime spans rows 1+2 (left), 22+ + africa stack (right), practical full-width */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: 'auto auto auto', gap: 8 }}>
 
-            {/* Col 1, rows 1+2 — dark glass, lifetime, fixed 2/3 height */}
+            {/* Col 1, rows 1+2 — dark glass, lifetime, 2/3 height, anchored to bottom */}
             <div style={{
-              gridRow: '1 / 3', alignSelf: 'start',
-              height: 132,
+              gridRow: '1 / 3', alignSelf: 'end',
+              height: 136,
               background: 'rgba(255,255,255,.06)',
               border: '1px solid rgba(255,255,255,.1)',
-              borderRadius: 14, padding: '20px',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10,
+              borderRadius: 14, padding: '18px 20px',
+              display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between',
             }}>
-              <span style={{ fontSize: 38, fontWeight: 900, color: 'var(--fd-orange)', lineHeight: 1 }}>∞</span>
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#fff', textAlign: 'center', lineHeight: 1.3 }}>Lifetime access</span>
+              <span style={{ fontSize: 34, fontWeight: 900, color: 'var(--fd-orange)', lineHeight: 1 }}>∞</span>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Lifetime access</div>
+                <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,.5)', lineHeight: 1.5 }}>
+                  Buy once. Your content is there whenever you need it.
+                </div>
+              </div>
             </div>
 
             {/* Col 2, row 1 — orange glass: 22+ */}
