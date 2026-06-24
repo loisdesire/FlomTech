@@ -32,7 +32,7 @@ export default function SubscribersPage() {
   useEffect(() => {
     fetch('/api/admin/subscribers')
       .then(r => r.json())
-      .then((d: { data?: Subscriber[] }) => { setSubs(d.data ?? []); setLoading(false); });
+      .then((d: Subscriber[]) => { setSubs(Array.isArray(d) ? d : []); setLoading(false); });
   }, []);
 
   const filtered = query.trim()

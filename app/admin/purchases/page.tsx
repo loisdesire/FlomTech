@@ -27,8 +27,8 @@ export default function PurchasesPage() {
 
   async function load() {
     const res = await fetch('/api/admin/purchases');
-    const data = await res.json() as { data: Purchase[] };
-    setPurchases(data.data ?? []);
+    const data = await res.json() as Purchase[];
+    setPurchases(Array.isArray(data) ? data : []);
     setLoading(false);
   }
 
