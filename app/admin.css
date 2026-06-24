@@ -397,8 +397,117 @@
 
 .adm-empty-icon { margin-bottom: 12px; opacity: .4; }
 
+/* ── Modal ───────────────────────────────────────────────────── */
+.adm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 35, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: adm-fade-in .15s ease;
+}
+
+@keyframes adm-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.adm-modal {
+  background: #fff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,.2), 0 4px 12px rgba(0,0,0,.08);
+  animation: adm-slide-up .2s cubic-bezier(.34,1.26,.64,1);
+  overflow: hidden;
+}
+
+@keyframes adm-slide-up {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+
+.adm-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 18px;
+  border-bottom: 1px solid #f0f1f3;
+  flex-shrink: 0;
+}
+
+.adm-modal-header span {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--adm-text);
+  letter-spacing: -.02em;
+}
+
+.adm-modal-body {
+  padding: 22px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.adm-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid #f0f1f3;
+  flex-shrink: 0;
+  background: #fafafa;
+}
+
+/* ── Toggle switch ───────────────────────────────────────────── */
+.adm-toggle-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adm-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #e5e7eb;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--adm-text);
+  background: #fff;
+  transition: border-color .15s, background .15s;
+  user-select: none;
+  flex: 1;
+  min-width: 140px;
+}
+
+.adm-toggle:has(input:checked) {
+  border-color: var(--adm-accent);
+  background: #f0f4ff;
+  color: var(--adm-accent);
+}
+
+.adm-toggle input[type="checkbox"] {
+  accent-color: var(--adm-accent);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .adm-sidebar { display: none; }
   .adm-page    { padding: 16px; }
+  .adm-modal   { max-width: 100%; border-radius: 14px; }
 }

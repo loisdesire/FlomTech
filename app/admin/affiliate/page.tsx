@@ -183,30 +183,65 @@ export default function AffiliateAdminPage() {
       {showForm && (
         <div className="adm-modal-backdrop" onClick={() => { setShowForm(false); setEditing(null); }}>
           <div className="adm-modal" onClick={e => e.stopPropagation()}>
-            <div className="adm-modal-header">
-              <span>{editing ? `Edit — ${editing.name}` : 'Add affiliate link'}</span>
-              <button onClick={() => { setShowForm(false); setEditing(null); }} className="adm-btn adm-btn-ghost adm-btn-sm">✕</button>
-            </div>
-            <div className="adm-modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {err && <div className="adm-alert adm-alert-error">{err}</div>}
 
-              <div className="adm-field">
-                <label className="adm-label">Tool name *</label>
-                <input className="adm-input" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Alibaba" />
+            {/* Header */}
+            <div className="adm-modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 34, height: 34, borderRadius: 9, background: 'linear-gradient(135deg,#3b4fe4,#6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Link2 size={15} color="#fff" />
+                </div>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--adm-text)', letterSpacing: '-.02em' }}>
+                    {editing ? 'Edit link' : 'Add affiliate link'}
+                  </div>
+                  {editing && <div style={{ fontSize: 11, color: 'var(--adm-muted)', marginTop: 1 }}>{editing.name}</div>}
+                </div>
               </div>
-              <div className="adm-field">
-                <label className="adm-label">Tagline</label>
-                <input className="adm-input" value={form.tagline} onChange={e => setForm(f => ({ ...f, tagline: e.target.value }))} placeholder="e.g. Global wholesale marketplace" />
+              <button
+                onClick={() => { setShowForm(false); setEditing(null); }}
+                style={{ background: '#f3f4f6', border: 'none', borderRadius: 8, width: 30, height: 30, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: '#6b7280' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="adm-modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {err && <div className="adm-alert adm-alert-error" style={{ marginBottom: 0 }}>{err}</div>}
+
+              {/* Row: name + tagline */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="adm-field">
+                  <label className="adm-label">Tool name <span style={{ color: '#ef4444' }}>*</span></label>
+                  <input className="adm-input" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Alibaba" autoFocus />
+                </div>
+                <div className="adm-field">
+                  <label className="adm-label">Tagline</label>
+                  <input className="adm-input" value={form.tagline} onChange={e => setForm(f => ({ ...f, tagline: e.target.value }))} placeholder="e.g. Global wholesale" />
+                </div>
               </div>
+
+              {/* Affiliate URL */}
               <div className="adm-field">
-                <label className="adm-label">Affiliate URL *</label>
-                <input className="adm-input" type="url" value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))} placeholder="https://..." />
+                <label className="adm-label">Affiliate URL <span style={{ color: '#ef4444' }}>*</span></label>
+                <input className="adm-input" type="url" value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))} placeholder="https://your-affiliate-link.com/ref=xxx" />
               </div>
+
+              {/* Description */}
               <div className="adm-field">
                 <label className="adm-label">Description</label>
-                <textarea className="adm-input" rows={3} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="One or two sentences about why you recommend this tool." />
+                <textarea
+                  className="adm-input"
+                  rows={3}
+                  value={form.description}
+                  onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                  placeholder="Why do you recommend this? One or two sentences."
+                  style={{ resize: 'vertical', lineHeight: 1.6 }}
+                />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+
+              {/* Row: category + sort order */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: 12 }}>
                 <div className="adm-field">
                   <label className="adm-label">Category</label>
                   <select className="adm-input" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
@@ -214,27 +249,34 @@ export default function AffiliateAdminPage() {
                   </select>
                 </div>
                 <div className="adm-field">
-                  <label className="adm-label">Sort order</label>
-                  <input className="adm-input" type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: Number(e.target.value) }))} />
+                  <label className="adm-label">Order</label>
+                  <input className="adm-input" type="number" min={0} value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: Number(e.target.value) }))} />
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: 20 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
+
+              {/* Toggles */}
+              <div className="adm-toggle-group">
+                <label className="adm-toggle">
                   <input type="checkbox" checked={form.featured} onChange={e => setForm(f => ({ ...f, featured: e.target.checked }))} />
-                  Mark as Top Pick
+                  ⭐ Mark as Top Pick
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
+                <label className="adm-toggle">
                   <input type="checkbox" checked={form.is_active} onChange={e => setForm(f => ({ ...f, is_active: e.target.checked }))} />
-                  Active (visible on site)
+                  👁 Visible on site
                 </label>
               </div>
             </div>
+
+            {/* Footer */}
             <div className="adm-modal-footer">
-              <button onClick={() => { setShowForm(false); setEditing(null); }} className="adm-btn adm-btn-ghost">Cancel</button>
-              <button onClick={save} disabled={saving} className="adm-btn adm-btn-primary">
+              <button onClick={() => { setShowForm(false); setEditing(null); }} className="adm-btn adm-btn-ghost">
+                Cancel
+              </button>
+              <button onClick={save} disabled={saving} className="adm-btn adm-btn-primary" style={{ minWidth: 110 }}>
                 {saving ? 'Saving…' : editing ? 'Save changes' : 'Add link'}
               </button>
             </div>
+
           </div>
         </div>
       )}
