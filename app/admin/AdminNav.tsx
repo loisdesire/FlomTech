@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FileText, Package, MessageSquare, ShoppingBag, Users } from 'lucide-react';
+import { LayoutDashboard, FileText, Package, MessageSquare, ShoppingBag, Users, Link2 } from 'lucide-react';
 
 const NAV = [
   { label: 'Dashboard',   href: '/admin',              Icon: LayoutDashboard },
@@ -10,6 +10,7 @@ const NAV = [
   { label: 'Products',    href: '/admin/products',      Icon: Package },
   { label: 'Purchases',   href: '/admin/purchases',     Icon: ShoppingBag },
   { label: 'Subscribers', href: '/admin/subscribers',   Icon: Users },
+  { label: 'Affiliate',   href: '/admin/affiliate',     Icon: Link2 },
   { label: 'Enquiries',   href: '/admin/enquiries',     Icon: MessageSquare },
 ];
 
